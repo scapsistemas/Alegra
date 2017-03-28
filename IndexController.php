@@ -19,7 +19,7 @@ class IndexController extends AbstractActionController
 {    
     public function indexAction()
     {        
-        $cmd='curl -v -H "Accept: application/json" -H "Content-type: application/json" -X GET  https://app.alegra.com/api/v1/contacts/ -u "luiscarlgonzalez@hotmail.com:5c60262cb4d98e251346"';
+        $cmd='curl -v -H "Accept: application/json" -H "Content-type: application/json" -X GET  https://app.alegra.com/api/v1/contacts/ -u "xxxxx:xxxxx"';
         exec($cmd,$result);
 
         return new ViewModel(
@@ -32,7 +32,7 @@ class IndexController extends AbstractActionController
     {
        //Recogemos el valor de la ruta
        $id = $this->numero;  
-       $cmd='curl -v -H "Accept: application/json" -H "Content-type: application/json" -X DELETE  https://app.alegra.com/api/v1/contacts/' . $id .  ' -u "luiscarlgonzalez@hotmail.com:5c60262cb4d98e251346"';       
+       $cmd='curl -v -H "Accept: application/json" -H "Content-type: application/json" -X DELETE  https://app.alegra.com/api/v1/contacts/' . $id .  ' -u "xxxxx:xxxxx"';       
        exec($cmd,$result);
 
     }       
