@@ -1,65 +1,109 @@
-<?php
-/**
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
+<html>
+ <head>            
+              <h3>Bienvenidos Alegra </h3>            
+</head>
+<link rel="stylesheet" href="js/extjs/resources/css/ext-all.css" type="text/css">
+<script src="js/extjs/ext-all.js"></script>            
+<script type="text/javascript"> 
+<?php 
+$resp = $this->Contactos[0];              
+$respjson=(json_decode($resp));
+?>  
 
-
-
-
-namespace Application\Controller;
-
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-
-
-
-class IndexController extends AbstractActionController
-{    
-    public function indexAction()
-    {        
-        $cmd='curl -v -H "Accept: application/json" -H "Content-type: application/json" -X GET  https://app.alegra.com/api/v1/contacts/ -u "luiscarlgonzalez@hotmail.com:5c60262cb4d98e251346"';
-        exec($cmd,$result);
-
-        return new ViewModel(
-              array(  'Contactos' => $result                 
-                   )                                
-                );
-    }
-    
-    public function procesa($action)
-    {
-       //Recogemos el valor de la ruta
-       $id = $this->numero;  
-        //$cmd='curl -v -H "Accept: application/json" -H "Content-type: application/json" -X DELETE  https://app.alegra.com/api/v1/contacts/' . $id .  ' -u "luiscarlgonzalez@hotmail.com:5c60262cb4d98e251346"';
-       $cmd='curl -v -H "Accept: application/json" -H "Content-type: application/json" -X GET  https://app.alegra.com/api/v1/contacts/ -u "luiscarlgonzalez@hotmail.com:5c60262cb4d98e251346"'; 
-       exec($cmd,$result);
-        
-        
-        return new ViewModel(
-               array(  'Elimina' => $result                 
-                   )                                
-                );
-    }       
-  
-public function redirAction(){
-    /*
-     * Refrescar la pagina
-     * return $this->redirect()->refresh();
-     */
-     
-    /*
-     * Redirigir a una ruta que tengamos definida en module.config.php
-     * return $this->redirect()->toRoute("home");
-     */
- 
-    /*
-     * Redirigir a una url
-     * obtenemos la url base y le indicamos donde ir
-     */
-         return $this->redirect()->toUrl(
-              $this->getRequest()->getBaseUrl().'/application/procesa/index'
-         );
-}    
+var jsvar  = '<?php echo($resp); ?>';
+var parsed = JSON.parse(jsvar);
+var arr = [];
+for(var i = 0; i < parsed.length; i++ ){
+    arr[i]=  [[parsed[i].id],[parsed[i].name], [parsed[i].identification], [parsed[i].phonePrimary], [parsed[i].observations]];
 }
+
+    Ext.require([
+    		'Ext.grid.*',
+    		'Ext.data.*',
+    		'Ext.util.*',
+    		'Ext.state.*'
+		]);            
+                       
+    
+		Ext.onReady(function() {
+        var store_data = Ext.create('Ext.data.ArrayStore', {
+        	fields: [
+                {name: 'id'},
+           	{name: 'nombre'},
+           	{name: 'identificacion'},
+                {name: 'telefono'},
+                {name: 'observaciones'},
+        	],
+        	data: arr
+    	});
+                                        
+
+    	// Crear el grid
+    var grid = Ext.create('Ext.grid.Panel', {
+        store: store_data,
+        width    : 150,              
+        stateId: 'stateGrid',
+        columns: [
+            {
+                text     : 'id',
+                width    : 25,                
+                sortable : true,
+                dataIndex: 'id'
+            },
+            {
+                text     : 'Nombre',
+                width    : 375,                
+                sortable : true,
+                dataIndex: 'nombre'
+            },
+            {
+                text     : 'Identificación',
+                width    : 120,
+                sortable : true,                                
+                dataIndex: 'identificacion'
+            },
+            {
+                text     : 'Teléfono 1',
+                width    : 100,
+                sortable : true,                     
+                dataIndex: 'telefono'
+            },
+            {
+                text     : 'Observaciones',
+                width    : 400,
+                sortable : true,                     
+                dataIndex: 'observaciones'
+            },
+            {
+                xtype : 'actioncolumn',
+                header : "Action",
+                items : [ {
+                        icon : '/imagen/delete.png',
+                        tooltip : 'Enable App',
+                        width : 50,
+                        id:'enableAppId',
+                        handler : function (grid, rowIndex) {
+
+        }
+                    }]
+            }
+            
+        ],
+        height: 350,
+        width: 1200,
+        title: 'Contactos',
+        renderTo: 'gridContactos',
+        viewConfig: {
+            stripeRows: true
+        }
+    });
+
+		});
+
+</script>
+<body>
+     
+<div id="gridContactos"/>  
+</div>
+</body>
+</html>
