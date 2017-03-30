@@ -1,11 +1,13 @@
 <html>
  <head>            
-              <h3>Bienvenidos Alegra </h3>            
+              <h3>Bienvenidos, Alegra </h3>            
 </head>
 <link rel="stylesheet" href="js/extjs/resources/css/ext-all.css" type="text/css">
 <script src="js/extjs/ext-all.js"></script>            
 <script type="text/javascript"> 
-<?php 
+ // creemos un array de php y pasemos el contenido en una variable javascript.
+ 
+  <?php            
 $resp = $this->Contactos[0];              
 $respjson=(json_decode($resp));
 ?>  
@@ -14,7 +16,7 @@ var jsvar  = '<?php echo($resp); ?>';
 var parsed = JSON.parse(jsvar);
 var arr = [];
 for(var i = 0; i < parsed.length; i++ ){
-    arr[i]=  [[parsed[i].id],[parsed[i].name], [parsed[i].identification], [parsed[i].phonePrimary], [parsed[i].observations]];
+    arr[i]=  [[parsed[i].id],[parsed[i].name], [parsed[i].identification], [parsed[i].phonePrimary], [parsed[i].observations], [parsed[i].city]];
 }
 
     Ext.require([
@@ -36,7 +38,7 @@ for(var i = 0; i < parsed.length; i++ ){
         	],
         	data: arr
     	});
-                                        
+                     
 
     	// Crear el grid
     var grid = Ext.create('Ext.grid.Panel', {
@@ -45,10 +47,10 @@ for(var i = 0; i < parsed.length; i++ ){
         stateId: 'stateGrid',
         columns: [
             {
-                text     : 'id',
+                text     : 'Id',
                 width    : 25,                
                 sortable : true,
-                dataIndex: 'id'
+                dataIndex: 'id'               
             },
             {
                 text     : 'Nombre',
@@ -73,36 +75,40 @@ for(var i = 0; i < parsed.length; i++ ){
                 width    : 400,
                 sortable : true,                     
                 dataIndex: 'observaciones'
-            },
+            },            
             {
                 xtype : 'actioncolumn',
                 header : "Action",
                 items : [ {
-                        icon : '/imagen/delete.png',
+                        icon : '../imagen/delete.png',
                         tooltip : 'Enable App',
                         width : 50,
                         id:'enableAppId',
                         handler : function (grid, rowIndex) {
-
         }
                     }]
             }
-            
         ],
         height: 350,
-        width: 1200,
+        width: 1130,
         title: 'Contactos',
         renderTo: 'gridContactos',
-        viewConfig: {
-            stripeRows: true
-        }
+       listeners : {
+         itemclick: function(dv, record, item, index, e) {
+   var ID = record.get('id');
+   alert (ID);
+
+}  
+       }
+
+
+        
     });
 
 		});
 
 </script>
-<body>
-     
+<body>     
 <div id="gridContactos"/>  
 </div>
 </body>
